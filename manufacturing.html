@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manufacturing Industries</title>
+    <link rel="stylesheet" type="text/css" href="content/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="content/css/site.css"/>
+    <script type="text/javascript" src="content/js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="content/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="content/js/d3.v3.min.js"></script></head>
+<body>
+    <nav role="navigation" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand"><img src=""> Blimp Design</a>
+        </div>
+    </nav>
+    <div class="container body-content">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Estimated number of manufacturing enterprises in different States</div>
+                    <table class="table table-hover">
+                        <tr>
+                            <td>State</td>
+                            <td id="name"></td>
+                        </tr>
+                        <tr>
+                            <td>Rural</td>
+                            <td id="rural"></td>
+                        </tr>
+                        <tr>
+                            <td>Urban</td>
+                            <td id="urban"></td>
+                        </tr>
+                        <tr>
+                            <td>All</td>
+                            <td id="all"></td>
+                        </tr>
+                        <tr>
+                            <td>% Share</td>
+                            <td id="share"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Legend</div>
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>Less than 1%</td>
+                            <td><span class="badge" style="background:#DD1E2F">&nbsp;</span></td>
+                        </tr>
+                        <tr>
+                            <td>1%-5%</td>
+                            <td><span class="badge" style="background:#EBB035">&nbsp;</span></td>
+                        </tr>
+                        <tr>
+                            <td>5%-10%</td>
+                            <td><span class="badge" style="background:#06A2CB">&nbsp;</span></td>
+                        </tr>
+                        <tr>
+                            <td>10%-15%</td>
+                            <td><span class="badge" style="background:#218559">&nbsp;</span></td>
+                        </tr>
+                        <tr>
+                            <td>15%-20%</td>
+                            <td><span class="badge" style="background:#192823">&nbsp;</span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="panel panel-default">
+                  <div class="panel-body">
+                    <p class="label label-warning">Data source</p></br>
+                    <p> http://data.gov.in/dataset/estimated-number-manufacturing-enterprises-different-statesuts </p>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="map">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <hr />
+    <footer>
+        <p>&copy; 2013 - Blimp Design</p>
+    </footer>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        //common vars
+        var width = $('#map').parent('div').width();
+        var height = d3.round(width * (9 / 16) + 200);
+
+        //sample tooltip : http://bl.ocks.org/biovisualize/1016860
+        var tooltip = d3.select("body")
+                        .append("div")
+                        .attr("id", "sampletooltip")
+                        .attr("class", "well  well-sm");
+        //default projection
+        var defaultProjection = d3.geo.mercator()
+                                      .scale(1200)
+                                      .translate([-1300, 800]);
+        //.center([79, 21]);
+
+
+        //default path generator
+        var defaultPath = d3.geo.path()
+                                .projection(defaultProjection);
+
+        //Create SVG element
+        var svg = d3.select("#map")
+                    .append("svg")
+                    .style({ "padding-top": "10px" })
+                    .attr("width", width)
+                    .attr("height", height);
+        //load  geojson
+        d3.json("content/json/in-states.js", function (json) {
+            //color as 
+            d3.json("content/json/manufacturing.js", function (datajson) {
+
+                for (var i = 0; i < datajson.data.length; i++) {
+                    var dataState = datajson.data[i][0];
+                    console.log(dataState);
+                    for (var j = 0; j < json.features.length; j++) {
+                        var gsonState = json.features[j].properties.name;
+                        if (gsonState.toUpperCase() == dataState.toUpperCase()) {
+                            json.features[j].properties.allRural_allUrban = datajson.data[i][9];
+                            json.features[j].properties.share = datajson.data[i][10];
+                            json.features[j].properties.allRural = datajson.data[j][3];
+                            json.features[j].properties.allUrban = datajson.data[j][6];
+                            break;
+                        }
+                    }
+                }
+                svg.selectAll("path")
+                   .data(json.features)
+                   .enter()
+                   .append("path")
+                   .attr("class", function (d) {
+                       return "state " + d.properties.name;
+                   })
+                   .attr("stroke-width", "0.2em")
+                   .attr("d", defaultPath)
+                   .attr("fill", function (d) {
+                       var value = d.properties.share;
+                       if (value < 1) {
+                           return "#DD1E2F";
+                       } else if (1 <= value && value < 5) {
+                           return "#EBB035";
+                       } else if (5 <= value && value < 10) {
+                           return "#06A2CB";
+                       } else if (10 <= value && value < 15) {
+                           return "#218559";
+                       } else if (15 <= value && value < 20) {
+                           return "#192823";
+                       } else {
+                           return "whitesmoke";
+                       }
+                   })
+                 .on("mouseover", function () {
+                     var properties = d3.select(this).datum().properties;
+                     $('#name').text(properties.name);
+                     $('#rural').text(properties.allRural);
+                     $('#urban').text(properties.allUrban);
+                     $('#all').text(properties.allRural_allUrban);
+                     $('#share').text(properties.share);
+                     return tooltip.html(properties.name + '&nbsp;<span class="badge pull-right">' + properties.share + '%</span>')
+                                   .style("visibility", "visible")
+                                   .style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
+                 })
+                 .on("mouseout", function () {
+                     return tooltip.style("visibility", "hidden");
+                 });
+
+            });
+        });
+    });
+    </script>
+</body>
+</html>

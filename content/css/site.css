@@ -1,0 +1,25 @@
+body{
+    padding-top: 60px;
+}
+#map .state {
+    stroke-width: 1px;
+    stroke-dasharray: 1,1;
+    stroke: whitesmoke;
+    stroke-linecap: round;
+    opacity: 0.8;
+}
+
+    #map .state:hover {
+        z-index: 9;
+        opacity: 1;
+        -webkit-transition: all 0.3s ease-out;
+        -moz-transition: all 0.3s ease-out;
+        -o-transition: all 0.3s ease-out;
+        transition: all 0.3s ease-out;
+    }
+
+#sampletooltip {
+    position: absolute;
+    z-index:10;
+    visibility:hidden;
+}
