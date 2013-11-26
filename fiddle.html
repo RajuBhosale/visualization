@@ -8,7 +8,9 @@
     <link rel="stylesheet" type="text/css" href="content/css/site.css"/>
     <script type="text/javascript" src="content/js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="content/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="content/js/d3.v3.min.js"></script></head>
+    <script type="text/javascript" src="content/js/d3.v3.min.js"></script>
+    <script type="text/javascript" src="content/json/CompleteIndia.js"></script>
+    </head>
 <body>
     <nav role="navigation" class="navbar navbar-inverse navbar-default navbar-fixed-top">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -119,26 +121,26 @@
                     .attr("width", width)
                     .attr("height", height);
         //load  geojson
-        d3.json("content/json/CompleteIndia.js", function (json) {
+       
             //color as 
             d3.json("content/json/manufacturing.js", function (datajson) {
 
                 for (var i = 0; i < datajson.data.length; i++) {
                     var dataState = datajson.data[i][0];
                     console.log(dataState);
-                    for (var j = 0; j < json.features.length; j++) {
-                        var gsonState = json.features[j].properties.name;
+                    for (var j = 0; j < india.features.length; j++) {
+                        var gsonState = india.features[j].properties.name;
                         if (gsonState.toUpperCase() == dataState.toUpperCase()) {
-                            json.features[j].properties.allRural_allUrban = datajson.data[i][9];
-                            json.features[j].properties.share = datajson.data[i][10];
-                            json.features[j].properties.allRural = datajson.data[j][3];
-                            json.features[j].properties.allUrban = datajson.data[j][6];
+                            india.features[j].properties.allRural_allUrban = datajson.data[i][9];
+                            india.features[j].properties.share = datajson.data[i][10];
+                            india.features[j].properties.allRural = datajson.data[j][3];
+                            india.features[j].properties.allUrban = datajson.data[j][6];
                             break;
                         }
                     }
                 }
                 svg.selectAll("path")
-                   .data(json.features)
+                   .data(india.features)
                    .enter()
                    .append("path")
                    .attr("class", function (d) {
@@ -178,7 +180,7 @@
                  });
 
             });
-        });
+        
     });
     </script>
 </body>
