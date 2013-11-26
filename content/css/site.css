@@ -1,5 +1,11 @@
 body{
-    padding-top: 60px;
+  
+}
+.brand-link{
+    z-index:5;
+    position:fixed;
+    top:0;
+    right:0;
 }
 #map .state {
     stroke-width: 1px;

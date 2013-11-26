@@ -3,22 +3,28 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manufacturing Industries</title>
+    <meta property="og:image" content="content/img/result.png"/>
+    <meta property="og:title" content="Visualization|Manufacturing Industries in India"/>    
+    <meta property="og:url" content="http://rajubhosale.github.io/visualization/manufacturing.html"/>
+    <meta property="og:site_name" content="play | blimp.co.in"/>
+    <meta property="og:type" content="Visualization"/>
+    <link rel="shortcut icon" href="blimp_favicon.png" type="image/png">
+    <title>Visualization | Manufacturing Industries in India</title>
     <link rel="stylesheet" type="text/css" href="content/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="content/css/site.css"/>
     <script type="text/javascript" src="content/js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="content/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="content/js/d3.v3.min.js"></script></head>
+
 <body>
-    <nav role="navigation" class="navbar navbar-inverse navbar-default navbar-fixed-top">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <a href="#" class="navbar-brand"><img src=""> Blimp Design</a>
-        </div>
-    </nav>
     <div class="container body-content">
         <div class="row">
-            <div class="col-md-3">
+             <div class="col-md-1 pull-right brand-link">
+                 <a href="http://blimp.co.in/#!/infographics">
+                    <img src="content/img/blimp.png" class="img-responsive" width="50" height="50">
+                 </a>
+            </div>
+            <div class="col-md-3 col-sd-12">
                 <div class="panel panel-primary">
                     <div class="panel-heading">Estimated number of manufacturing enterprises in different States</div>
                     <table class="table table-hover">
@@ -76,9 +82,9 @@
                   </div>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 col-sd-12">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 map-container">
                         <div id="map">
                         </div>
                     </div>
@@ -87,14 +93,17 @@
         </div>
     <hr />
     <footer>
-        <p>&copy; 2013 - Blimp Design</p>
+        <p>&copy; 2013 - <a href="http://blimp.co.in/">Blimp Design</a></p>
     </footer>
 
     <script type="text/javascript">
     $(document).ready(function(){
         //common vars
-        var width = $('#map').parent('div').width();
-        var height = d3.round(width * (9 / 16) + 200);
+        var width = d3.round($('.map-container').width());
+        var height =d3.round($(window).height());
+      
+        //var width = $('#map').parent('div').width();
+        //var height = d3.round(width * (9 / 16) + 200);
 
         //sample tooltip : http://bl.ocks.org/biovisualize/1016860
         var tooltip = d3.select("body")
@@ -103,11 +112,8 @@
                         .attr("class", "well  well-sm");
         //default projection
         var defaultProjection = d3.geo.mercator()
-                                      .scale(1200)
-                                      .translate([-1300, 800]);
-        //.center([79, 21]);
-
-
+                                      .scale(1000)
+                                      .translate([-1000, 800]);
         //default path generator
         var defaultPath = d3.geo.path()
                                 .projection(defaultProjection);
@@ -115,11 +121,21 @@
         //Create SVG element
         var svg = d3.select("#map")
                     .append("svg")
-                    .style({ "padding-top": "10px" })
                     .attr("width", width)
                     .attr("height", height);
         //load  geojson
-        d3.json("content/json/CompleteIndia.js", function (json) {
+        d3.json("content/json/in-states.js", function (json) {
+                var center = d3.geo.centroid(json)
+                var scale = 1200;
+                var offset = [(width / 2)-100, height / 2];
+
+                defaultProjection = d3.geo.mercator()
+                                       .scale(scale)
+                                       .center(center)
+                                       .translate(offset);
+                
+                defaultPath = d3.geo.path()
+                                    .projection(defaultProjection);
             //color as 
             d3.json("content/json/manufacturing.js", function (datajson) {
 

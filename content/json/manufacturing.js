@@ -132,7 +132,7 @@
             3.65
         ],
         [
-            "Orissa",
+            "Odisha (Orissa)",
             504930,
             43132,
             548062,
@@ -223,7 +223,7 @@
             1.27
         ],
         [
-            "Delhi",
+            "New Delhi",
             3117,
             2659,
             5776,
@@ -262,7 +262,7 @@
             0.96
         ],
         [
-            "Uttaranchal",
+            "Uttarakhand",
             55345,
             14244,
             69588,
@@ -327,7 +327,7 @@
             0.11
         ],
         [
-            "Puducherry",
+            "Puducherry (Pondicherry)",
             1847,
             614,
             2461,
@@ -392,7 +392,7 @@
             0.02
         ],
         [
-            "A & N. Islands",
+            "Andaman and Nicobar Islands",
             1698,
             257,
             1954,
@@ -405,7 +405,7 @@
             0.02
         ],
         [
-            "Daman & Diu",
+            "Daman and Diu",
             378,
             387,
             765,
@@ -418,7 +418,7 @@
             0.01
         ],
         [
-            "Dadra & N. Haveli",
+            "Dadra and Nagar Haveli",
             566,
             469,
             1035,
